@@ -49,13 +49,17 @@ class CodeRepository
                   FROM serial_codes
                  WHERE user_email IS NULL
                    AND product = $escapedProduct
-                 LIMIT :$product
+                 LIMIT ?
             ) AS $product
             SQL;
         }
 
         $stmt = $this->con->prepare(implode(' UNION ', $queries));
-        $stmt->execute($numberOfSales);
+        $i = 1;
+        foreach ($numberOfSales as $number) {
+            $stmt->bindParam($i++, $number, \PDO::PARAM_INT);
+        }
+        $stmt->execute();
 
         $groupedCodes = $stmt->fetchAll(\PDO::FETCH_GROUP);
         $groupedSerialCodes = [
