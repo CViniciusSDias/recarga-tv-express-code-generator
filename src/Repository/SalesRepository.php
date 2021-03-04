@@ -45,10 +45,10 @@ class SalesRepository
         }));
 
         $groupedCodes = $this->codeRepository->findUnusedCodes([
-            'anual' => $annualSales,
-            'mensal' => $monthlySales,
-            'anual-mc' => $annualMcSales,
-            'mensal-mc' => $monthlyMcSales,
+            'anual' => count($annualSales),
+            'mensal' => count($monthlySales),
+            'anual-mc' => count($annualMcSales),
+            'mensal-mc' => count($monthlyMcSales),
         ]);
         if (count($annualSales) > count($groupedCodes['anual'])
             || count($monthlySales) > count($groupedCodes['mensal'])

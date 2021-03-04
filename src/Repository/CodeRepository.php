@@ -52,7 +52,6 @@ class CodeRepository
                  LIMIT :$product
             ) AS $product
             SQL;
-
         }
 
         $stmt = $this->con->prepare(implode(' UNION ', $queries));
