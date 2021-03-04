@@ -50,14 +50,14 @@ class CodeRepository
                  WHERE user_email IS NULL
                    AND product = $escapedProduct
                  LIMIT ?
-            ) AS $product
+            ) AS `$product`
             SQL;
         }
 
         $stmt = $this->con->prepare(implode(' UNION ', $queries));
         $i = 1;
         foreach ($numberOfSales as $number) {
-            $stmt->bindParam($i++, $number, \PDO::PARAM_INT);
+            $stmt->bindValue($i++, $number, \PDO::PARAM_INT);
         }
         $stmt->execute();
 
