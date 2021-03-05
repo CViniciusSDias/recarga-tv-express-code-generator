@@ -75,13 +75,15 @@ class SalesRepository
             throw $e;
         }
 
-        return array_merge($annualSales, $monthlySales);
+        return array_merge($annualSales, $monthlySales, $annualMcSales, $monthlyMcSales);
     }
 
     /**
      * @param array<string, Code[]> $grouppedCodes
      * @param Sale[] $annualSales
      * @param Sale[] $monthlySales
+     * @param Sale[] $annualMcSales
+     * @param Sale[] $monthlyMcSales
      */
     private function attachCodesToSales(array $grouppedCodes, array $annualSales, array $monthlySales, array $annualMcSales, array $monthlyMcSales): void
     {
