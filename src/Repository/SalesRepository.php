@@ -27,6 +27,7 @@ class SalesRepository
      * @return Sale[]
      * @throws \PDOException
      * @throws NotEnoughCodesException
+     * @todo Add tests for MC products
      */
     public function salesWithCodes(): array
     {

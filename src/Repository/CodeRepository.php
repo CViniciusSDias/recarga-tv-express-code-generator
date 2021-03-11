@@ -6,6 +6,11 @@ use CViniciusSDias\RecargaTvExpress\Model\Code;
 use CViniciusSDias\RecargaTvExpress\Model\Sale;
 use PDO;
 
+/**
+ * Class CodeRepository
+ * @package CViniciusSDias\RecargaTvExpress\Repository
+ * @todo Write tests for this class
+ */
 class CodeRepository
 {
     private $con;

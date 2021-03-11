@@ -28,15 +28,11 @@ class WixEmailParser extends EmailParser
             ->query('/html/body/table[@id="backgroundTable"]//td[@class="section-content"]');
 
         $emailAddress = $this->retrieveEmailAddress($infoNodes);
-        $product = $this->retrieveProduct($infoNodes);
-        $quantity = intval($xPath->query('//td[@class="qty"]')->item(0)->textContent);
-        $sales = [];
+        $products = $this->retrieveProducts($infoNodes);
 
-        for ($i = 0; $i < $quantity; $i++) {
-            $sales[] = new Sale(new Email($emailAddress), $product);
-        }
-
-        return $sales;
+        return array_map(function (string $product) use ($emailAddress) {
+            return new Sale(new Email($emailAddress), $product);
+        }, $products);
     }
 
     private function retrieveEmailAddress(\DOMNodeList $infoNodes): string
@@ -54,12 +50,23 @@ class WixEmailParser extends EmailParser
         return trim(array_values($emailArray)[0]);
     }
 
-    private function retrieveProduct(\DOMNodeList $infoNodes): string
+    private function retrieveProducts(\DOMNodeList $infoNodes): array
     {
-        $productInfo = $infoNodes->item(2)
-            ->textContent;
-        preg_match('/pacote (mensal-mc|anual-mc|mensal|anual)/i', $productInfo, $productMatches);
+        $productInfo = $infoNodes->item(2);
+        $xPath = new \DOMXPath($productInfo->ownerDocument);
+        $items = $xPath->query('//span[@class="item-name"]', $productInfo);
+        $products = [];
 
-        return $productMatches[1];
+        /** @var \DOMNode $item */
+        foreach ($items as $item) {
+            $productName = $item->textContent;
+            preg_match('/pacote (mensal-mc|anual-mc|mensal|anual)/i', $productName, $productMatches);
+
+            $quantity = intval($item->parentNode->nextSibling->nextSibling->textContent);
+            // todo Understand why + operator doesn't do the trick
+            $products = array_merge($products, array_fill(0, $quantity, $productMatches[1]));
+        }
+
+        return $products;
     }
 }

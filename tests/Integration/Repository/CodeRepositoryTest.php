@@ -56,12 +56,11 @@ class CodeRepositoryTest extends TestCase
         self::assertEquals(3, $numberOfAvailableCodes['mensal']);
     }
 
-    public function testNumberOfAvailableCodesMustBeZeroForBothProductTypesIfTheRepositoryIsEmpty()
+    public function testThereShouldBeNoAvailableCodeIfTheRepositoryIsEmpty()
     {
         $numberOfAvailableCodes = $this->codeRepository->findNumberOfAvailableCodes();
 
-        self::assertEquals(0, $numberOfAvailableCodes['anual']);
-        self::assertEquals(0, $numberOfAvailableCodes['mensal']);
+        self::assertEmpty($numberOfAvailableCodes);
     }
 
     public function testSearchForSpecificNumberOfCodesShouldReturnGrouppedArray()

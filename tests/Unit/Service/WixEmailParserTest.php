@@ -90,4 +90,24 @@ class WixEmailParserTest extends TestCase
         $this->assertSame('anual-mc', $sales[0]->product);
         $this->assertEquals('email@example.com', $sales[0]->costumerEmail);
     }
+
+    public function testEmailWithSalesForTwoDifferentProductsReturnsTwoDifferentSales()
+    {
+        //Arrange
+        $emailBody = file_get_contents(__DIR__ . '/../../data/email-from-wix-with-two-products.html');
+        $sut = new WixEmailParser();
+
+        $incomingMailStub = $this->createStub(IncomingMail::class);
+        $incomingMailStub->fromAddress = 'no-reply@mystore.wix.com';
+        $incomingMailStub->method('__get')->willReturn($emailBody);
+
+        // Act
+        $sales = $sut->parse($incomingMailStub);
+
+        // Assert
+        self::assertCount(2, $sales);
+        self::assertContainsOnlyInstancesOf(Sale::class, $sales);
+        self::assertSame('anual', $sales[0]->product);
+        self::assertSame('anual-mc', $sales[1]->product);
+    }
 }
